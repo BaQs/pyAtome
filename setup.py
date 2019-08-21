@@ -6,7 +6,7 @@ import codecs
 import os
 import sys
 
-import pyatome
+import pyatome 
 
 here = os.path.abspath(os.path.dirname(__file__))
 
