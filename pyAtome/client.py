@@ -1,10 +1,9 @@
 import json
-import simplejson
+# import simplejson
 # import pickle
 # from dateutil.relativedelta import relativedelta
 import requests
 from fake_useragent import UserAgent
-
 
 # ATOME_COOKIE = "atome_cookies.pickle"
 # ATOME_USER_ID = "atome_user_id.pickle"
@@ -112,7 +111,8 @@ class AtomeClient(object):
 
         try:
             json_output = req.json()
-        except (OSError, json.decoder.JSONDecodeError, simplejson.errors.JSONDecodeError) as e:
+        # except (OSError, json.decoder.JSONDecodeError, simplejson.errors.JSONDecodeError) as e:
+        except (OSError, json.decoder.JSONDecodeError) as e:
             raise PyAtomeError("Impossible to decode response: " + str(e) + "\nResponse was: " + str(req.text))
 
         return json_output
