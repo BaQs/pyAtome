@@ -76,8 +76,8 @@ class AtomeClient(object):
                                timeout=self._timeout)
         except OSError:
             raise PyAtomeError("Can not login to API")
-        if "PHPSESSID" not in self._session.cookies:
-            raise PyAtomeError("Login error: Please check your username/password." + str(self._session.cookies))
+        if 'PHPSESSID' not in req.cookies:
+            raise PyAtomeError("Login error: Please check your username/password: %s ", str(req.text))
         response_json = req.json()
 
         user_id = str(response_json["id"])
