@@ -6,11 +6,9 @@ python:
 install:
 - pip install -r requirements.txt
 - pip install -e .
-- pwd
-- find .
 script: python -m pytest
 after_script: cd ~
-deployment:
+deploy:
   provider: pypi
   user: baqs
   password:
