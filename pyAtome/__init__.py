@@ -1,1 +1,1 @@
-"""from pyatome.client import AtomeClient"""
+from pyAtome.client import AtomeClient
