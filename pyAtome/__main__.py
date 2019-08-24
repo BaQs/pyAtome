@@ -1,7 +1,7 @@
 import argparse
 import sys
 import json
-# import logging
+import logging
 
 from pyatome import AtomeClient
 
@@ -21,13 +21,13 @@ def main():
     client = AtomeClient(args.username, args.password)
 
     try:
-        # if args.debug:
-        #     # You must initialize logging, otherwise you'll not see debug output.
-        #     logging.basicConfig()
-        #     logging.getLogger().setLevel(logging.DEBUG)
-        #     requests_log = logging.getLogger("requests.packages.urllib3")
-        #     requests_log.setLevel(logging.DEBUG)
-        #     requests_log.propagate = True
+        if args.debug:
+            # You must initialize logging, otherwise you'll not see debug output.
+            logging.basicConfig()
+            logging.getLogger().setLevel(logging.DEBUG)
+            requests_log = logging.getLogger("requests.packages.urllib3")
+            requests_log.setLevel(logging.DEBUG)
+            requests_log.propagate = True
 
 
 
