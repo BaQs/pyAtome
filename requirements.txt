@@ -1,4 +1,4 @@
 requests_mock
 requests
 simplejson
-bfake_useragent
+fake_useragent
