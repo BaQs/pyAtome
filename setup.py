@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='pyAtome',
-    version="0.0.11",
+    version="0.0.13",
     license='Apache Software License',
     author='Pierre Ourdouille',
     author_email='baqs@users.github.com',
