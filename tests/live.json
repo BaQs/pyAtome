@@ -1,0 +1,10 @@
+{
+  "isConnected": true,
+  "time": "2019-08-24T16:19:07+02:00",
+  "last": 2289,
+  "subscribed": 9000,
+  "customPowerMin": 0,
+  "customPowerMax": 12000,
+  "filteredPower": 999,
+  "timeLimitBeforePowerFailure": -1
+  }
