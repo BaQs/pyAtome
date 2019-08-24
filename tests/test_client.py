@@ -93,6 +93,38 @@ class AtomeClientTestCase(unittest.TestCase):
         logging.debug(liveData)
         assert liveData['last'] == 2289
 
+
+    @requests_mock.Mocker()
+    def test_relog_after_session_down(self, m):
+    # we login
+        client = self.test_login()
+    # # then we erase the session
+    #     # client._session.cookies = None
+    # # so that we can ask for data and see if it logs back
+        # __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+        # with open(os.path.join(__location__, 'live.json'), 'r') as f:
+        #     live_answer = json.load(f)
+
+        __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+        with open(os.path.join(__location__, 'login.json'), 'r') as f:
+            login_answer = json.load(f)
+
+        live_url = (
+            API_BASE_URI
+            + "/api/subscription/"
+            + client._user_id
+            + "/"
+            + client._user_reference
+            + API_ENDPOINT_LIVE
+            )
+
+        m.post(LOGIN_URL, status_code=200, cookies={'PHPSESSID': 'TEST'}, text=json.dumps(login_answer))
+        m.get(live_url, text="Wrong session", status_code=403)
+
+        # shall generate an exception
+        with self.assertRaises(Exception): client.get_live()
+
+
     def test(self):
         data = None
         if not data:

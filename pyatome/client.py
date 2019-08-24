@@ -3,6 +3,7 @@ import json
 # import pickle
 # from dateutil.relativedelta import relativedelta
 import requests
+import logging
 from fake_useragent import UserAgent
 
 # ATOME_COOKIE = "atome_cookies.pickle"
@@ -17,6 +18,7 @@ API_ENDPOINT_LIVE = "/measure/live.json"
 LOGIN_URL = API_BASE_URI + API_ENDPOINT_LOGIN
 
 DEFAULT_TIMEOUT = 10
+MAX_RETRIES = 3
 
 # LOGIN_URL = "https://espace-client-connexion.enedis.fr/auth/UI/Login"
 # HOST = "https://espace-client-particuliers.enedis.fr/group/espace-particuliers"
@@ -76,20 +78,28 @@ class AtomeClient(object):
                                timeout=self._timeout)
         except OSError:
             raise PyAtomeError("Can not login to API")
+
         if 'PHPSESSID' not in req.cookies:
             raise PyAtomeError("Login error: Please check your username/password: %s ", str(req.text))
-        response_json = req.json()
 
-        user_id = str(response_json["id"])
-        user_reference = response_json["subscriptions"][0]["reference"]
+        try:
+            response_json = req.json()
 
-        self._user_id = user_id
-        self._user_reference = user_reference
+            user_id = str(response_json["id"])
+            user_reference = response_json["subscriptions"][0]["reference"]
+
+            self._user_id = user_id
+            self._user_reference = user_reference
+        except (OSError, json.decoder.JSONDecodeError) as e:
+            raise PyAtomeError("Impossible to decode response: \nResponse was: [%s] %s", str(e), str(req.status_code), str(req.text))
 
         return True
 
-    def _get_live(self):
+    def _get_live(self, max_retries=0):
         """Get data."""
+
+        if max_retries > MAX_RETRIES:
+            raise PyAtomeError("Can't gather proper data. Max retries exceeded.")
 
         live_url = (
             API_BASE_URI
@@ -105,6 +115,12 @@ class AtomeClient(object):
 
         except OSError as e:
             raise PyAtomeError("Could not access Atome's API: " + str(e))
+            
+        if req.status_code == 403:
+        # session is wrong, need to relogin
+            self.login()
+            logging.info("Got 403, relogging (max retries: %s)",str(max_retries))
+            return self._get_live(max_retries+1)
 
         if req.text is "":
             raise PyAtomeError("No data")
@@ -120,7 +136,6 @@ class AtomeClient(object):
 
     def get_live(self):
         """Get current data."""
-        # return {"live": self._get_live}
         return self._get_live()
 
     def close_session(self):
