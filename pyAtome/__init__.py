@@ -1,1 +1,1 @@
-from pyAtome.client import AtomeClient
+from pyatome.client import AtomeClient

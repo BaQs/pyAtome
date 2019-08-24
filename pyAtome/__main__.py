@@ -3,7 +3,7 @@ import sys
 import json
 import logging
 
-from pyatome import AtomeClient
+from pyAtome import AtomeClient
 
 
 def main():
