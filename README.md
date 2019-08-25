@@ -15,9 +15,15 @@ pip install pyatome
 
 
 ## Running the tests
+The tox configuration is already included.
+Simply launch:
+```
+$ tox
+```
 
-
-### Break down into end to end tests
+(Do not forget to 'pip install tox' if you do not have it.)
+Tests are written in the tests directory.
+tests/data folder contains samples of Atome API for tests purposes.
 
 
 ## Side notes
@@ -44,3 +50,11 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 * Thanks to k20human for the original inspiration with https://github.com/k20human/domoticz-atome
 
+## Changelog
+
+### 0.1.x
+- Better tests
+- Added consumption feature
+
+### 0.0.x
+First versions, providing live data only
