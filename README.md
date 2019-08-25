@@ -1,7 +1,6 @@
 # Atome PyPi
 
-[![Build Status](https://travis-ci.com/BaQs/pyAtome.svg?branch=master)](https://travis-ci.com/BaQs/pyAtome)
-
+[![Build Status](https://travis-ci.org/BaQs/pyAtome.svg?branch=master)](https://travis-ci.org/BaQs/pyAtome)
 
 Get your energy consumption data from Atome, a Linky-compatible device made by Total/Direct-Energie.
 
