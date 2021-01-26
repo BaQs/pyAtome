@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 setuptools.setup(
     name='pyAtome',
     version="0.1.1",
-    license='Apache Software License',
+    license='Apache Software License 2.0',
     author='Pierre Ourdouille',
     author_email='baqs@users.github.com',
     description='Get your energy consumption from Atome Linky device',
