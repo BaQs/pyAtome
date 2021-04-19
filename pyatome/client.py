@@ -142,7 +142,7 @@ class AtomeClient(object):
         """Get consumption according to period."""
         """ Period can be: day, week, month, year"""
         if period not in ['day','week','month','year']:
-            raise ValueError("Period %s out of range. Shall be either 'day', 'week', 'month' or 'year'." %s)
+            raise ValueError("Period %s out of range. Shall be either 'day', 'week', 'month' or 'year'." % period)
 
         if max_retries > MAX_RETRIES:
             raise PyAtomeError("Can't gather proper data. Max retries exceeded.")
