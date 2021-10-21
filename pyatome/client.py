@@ -127,7 +127,7 @@ class AtomeClient(object):
             logging.info("Got 403, relogging (max retries: %s)",str(max_retries))
             return self._get_live(max_retries+1)
 
-        if req.text is "":
+        if req.text == "":
             raise PyAtomeError("No data")
 
         try:
@@ -170,7 +170,7 @@ class AtomeClient(object):
             logging.info("Got 403, relogging (max retries: %s)",str(max_retries))
             return self._get_consumption(max_retries+1)
 
-        if req.text is "":
+        if req.text == "":
             raise PyAtomeError("No data")
 
         try:
