@@ -116,12 +116,13 @@ class AtomeClient(object):
         )
         try:
             req = self._session.get(live_url,
-                                    timeout=self._timeout)
+                                    timeout=self._timeout,
+                                    allow_redirects=False)
 
         except OSError as e:
             raise PyAtomeError("Could not access Atome's API: " + str(e))
-            
-        if req.status_code == 403:
+
+        if req.status_code == 403 or req.status_code == 302:
         # session is wrong, need to relogin
             self.login()
             logging.info("Got 403, relogging (max retries: %s)",str(max_retries))
@@ -132,9 +133,8 @@ class AtomeClient(object):
 
         try:
             json_output = req.json()
-        # except (OSError, json.decoder.JSONDecodeError, simplejson.errors.JSONDecodeError) as e:
-        except (OSError, json.decoder.JSONDecodeError) as e:
-            raise PyAtomeError("Impossible to decode response: " + str(e) + "\nResponse was: " + str(req.text))
+        except Exception as e:
+            raise PyAtomeError("Impossible to decode response: " + str(e) + "\nResponse was: " + str(req.text) + "\nStatus was: " + str(req.status_code))
 
         return json_output
 
@@ -159,12 +159,13 @@ class AtomeClient(object):
         )
         try:
             req = self._session.get(consumption_url,
-                                    timeout=self._timeout)
+                                    timeout=self._timeout,
+                                    allow_redirects=False)
 
         except OSError as e:
             raise PyAtomeError("Could not access Atome's API: " + str(e))
-            
-        if req.status_code == 403:
+
+        if req.status_code == 403 or req.status_code == 302:
         # session is wrong, need to relogin
             self.login()
             logging.info("Got 403, relogging (max retries: %s)",str(max_retries))
@@ -175,11 +176,11 @@ class AtomeClient(object):
 
         try:
             json_output = req.json()
-        except (OSError, json.decoder.JSONDecodeError) as e:
-            raise PyAtomeError("Impossible to decode response: " + str(e) + "\nResponse was: " + str(req.text))
+        except Exception as e:
+            raise PyAtomeError("Impossible to decode response: " + str(e) + "\nResponse was: " + str(req.text) + "\nStatus was: " + str(req.status_code))
 
         return json_output
-        
+
 
     def get_live(self):
         """Get current data."""
@@ -193,4 +194,3 @@ class AtomeClient(object):
         """Close current session."""
         self._session.close()
         self._session = None
-
