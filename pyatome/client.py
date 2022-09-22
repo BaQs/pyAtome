@@ -1,5 +1,5 @@
 import json
-# import simplejson
+import simplejson
 # import pickle
 # from dateutil.relativedelta import relativedelta
 import requests
@@ -84,8 +84,8 @@ class AtomeClient(object):
         except OSError:
             raise PyAtomeError("Can not login to API")
 
-        if 'PHPSESSID' not in req.cookies:
-            raise PyAtomeError("Login error: Please check your username/password: %s ", str(req.text))
+        #if 'PHPSESSID' not in req.cookies:
+        #    raise PyAtomeError("Login error: Please check your username/password: %s ", str(req.text))
 
         try:
             response_json = req.json()
@@ -95,7 +95,8 @@ class AtomeClient(object):
 
             self._user_id = user_id
             self._user_reference = user_reference
-        except (OSError, json.decoder.JSONDecodeError) as e:
+        except (OSError, json.decoder.JSONDecodeError, simplejson.errors.JSONDecodeError) as e:
+        # except (OSError, json.decoder.JSONDecodeError) as e:
             raise PyAtomeError("Impossible to decode response: \nResponse was: [%s] %s", str(e), str(req.status_code), str(req.text))
 
         return True
@@ -123,26 +124,26 @@ class AtomeClient(object):
             raise PyAtomeError("Could not access Atome's API: " + str(e))
 
         if req.status_code == 403 or req.status_code == 302:
+
         # session is wrong, need to relogin
             self.login()
             logging.info("Got 403, relogging (max retries: %s)",str(max_retries))
             return self._get_live(max_retries+1)
 
-        if req.text is "":
+        if req.text == "":
             raise PyAtomeError("No data")
 
         try:
             json_output = req.json()
         except Exception as e:
             raise PyAtomeError("Impossible to decode response: " + str(e) + "\nResponse was: " + str(req.text) + "\nStatus was: " + str(req.status_code))
-
         return json_output
 
     def _get_consumption(self, period, max_retries=0):
         """Get consumption according to period."""
         """ Period can be: day, week, month, year"""
         if period not in ['day','week','month','year']:
-            raise ValueError("Period %s out of range. Shall be either 'day', 'week', 'month' or 'year'." %s)
+            raise ValueError("Period %s out of range. Shall be either 'day', 'week', 'month' or 'year'." , str(period))
 
         if max_retries > MAX_RETRIES:
             raise PyAtomeError("Can't gather proper data. Max retries exceeded.")
@@ -166,12 +167,13 @@ class AtomeClient(object):
             raise PyAtomeError("Could not access Atome's API: " + str(e))
 
         if req.status_code == 403 or req.status_code == 302:
+
         # session is wrong, need to relogin
             self.login()
             logging.info("Got 403, relogging (max retries: %s)",str(max_retries))
             return self._get_consumption(max_retries+1)
 
-        if req.text is "":
+        if req.text == "":
             raise PyAtomeError("No data")
 
         try:
@@ -180,6 +182,7 @@ class AtomeClient(object):
             raise PyAtomeError("Impossible to decode response: " + str(e) + "\nResponse was: " + str(req.text) + "\nStatus was: " + str(req.status_code))
 
         return json_output
+
 
 
     def get_live(self):
